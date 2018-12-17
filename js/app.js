@@ -1,15 +1,12 @@
 (function (window) {
 	'use strict';
-
+	
+	let list = JSON.parse(localStorage.getItem('todolist')) || [];
 	 
 	const vm = new Vue({
 		el: '.todoapp',
 		data: {
-			list:[
-				{id:1, name:'zhangsan',completed:true},
-				{id:2, name:'lisi', completed: false},
-				{id:3, name:'jack', completed: false},
-			],
+			list,
 			todoMsg: '',
 		  clickId: -1
 		},
@@ -34,6 +31,22 @@
 			},
 			clearTodos(){
 				this.list = this.list.filter(item => !item.completed)
+			}
+		},
+		computed:{
+			leftCount(){
+				return this.list.filter(item => !item.completed).length
+			},
+			isShowClear(){
+				return this.list.some(item => item.completed)
+			}
+		},
+		watch:{
+			list:{
+				handler(value){
+          localStorage.setItem('todolist',JSON.stringify(value))
+				},
+				deep: true,
 			}
 		}
 
